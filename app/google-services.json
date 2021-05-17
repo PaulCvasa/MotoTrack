@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "488784929007",
+    "firebase_url": "https://mototrack-eb3a9-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mototrack-eb3a9",
+    "storage_bucket": "mototrack-eb3a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488784929007:android:d907df466a3c762b84bb1a",
+        "android_client_info": {
+          "package_name": "com.example.mototrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488784929007-9em8m6i7m7dqej3fj9pnbntnelitlgca.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFYq6oJD7CLp42yOLD9fggs6pH4RTAUt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488784929007-9em8m6i7m7dqej3fj9pnbntnelitlgca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

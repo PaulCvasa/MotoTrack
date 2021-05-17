@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MotoTrack</string>
+    <string name="title_activity_main_screen">MainActivityScreen</string>
+    <string name="login_logo">MotoTrack - a motorcycle management app</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="todo">TODO</string>
+    <string name="dashboard_title">Dashboard Page</string>
+    <string name="add_new_motorcycle">Add New Motorcycle</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="register">Register</string>
+    <string name="add_motorcycle">Add Motorcycle</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_name">Name</string>
+    <string name="logout">Logout</string>
+    <string name="motorcycle_model">Motorcycle Model</string>
+    <string name="motorcycle_brand">Motorcycle Brand</string>
+    <string name="mileage">Mileage</string>
+    <string name="vehicle_identification_number">Vehicle Identification Number</string>
+    <string name="_2021_paul_cvasa_all_rights_reserved">©2021 Paul Cvasa All Rights Reserved</string>
+</resources>
