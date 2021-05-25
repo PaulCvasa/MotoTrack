@@ -18,19 +18,19 @@ class DashboardActivity: AppCompatActivity() {
     {
         val intent = Intent(this, VirtualGarage::class.java)
         startActivity(intent)
-        finish()
+        //finish()
     }
 
     fun logout(view: View)
     {
         FirebaseAuth.getInstance().signOut()
-        val intent2 = Intent(this, MainActivityScreen::class.java)
+        //val intent2 = Intent(this, MainActivityScreen::class.java)
         finish()
     }
     fun addMotorcycle(view: View)
     {
         val intent3 = Intent(this, AddMotorcycle::class.java)
         startActivity(intent3)
-        finish()
+        //finish()
     }
 }

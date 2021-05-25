@@ -1,8 +1,12 @@
 package com.example.mototrack
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.example.mototrack.databinding.ActivityAddMotorcycleBinding
 import com.example.mototrack.databinding.ActivityMainScreenBinding
 import com.google.firebase.database.DatabaseReference
@@ -37,4 +41,10 @@ class AddMotorcycle : AppCompatActivity() {
             }
         }
     }
+
+    fun backToDashboard(view: View)
+    {
+        finish()
+    }
 }
+

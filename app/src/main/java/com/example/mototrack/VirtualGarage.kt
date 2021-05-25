@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 
 
@@ -83,8 +84,9 @@ class VirtualGarage: AppCompatActivity() {
 
 
         fun removeItem(position: Int) {
-            mMotorcycleList.removeAt(position)
-            mAdapter!!.notifyItemRemoved(position)
+            mototrackRef.child(mMotorcycleList[position-1].getText4().toString()).removeValue()
+            mMotorcycleList.removeAt(position-1)
+            mAdapter!!.notifyItemRemoved(position-1)
         }
 
 
