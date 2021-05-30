@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.example.mototrack.databinding.ActivityAddMotorcycleBinding
 import com.example.mototrack.databinding.ActivityMainScreenBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -16,6 +17,7 @@ class AddMotorcycle : AppCompatActivity() {
 
     private lateinit var binding : ActivityAddMotorcycleBinding
     private lateinit var database : DatabaseReference
+    private val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddMotorcycleBinding.inflate(layoutInflater)
@@ -27,9 +29,9 @@ class AddMotorcycle : AppCompatActivity() {
             val mileage = binding.mileage.text.toString()
             val vin = binding.vin.text.toString()
 
-            database = FirebaseDatabase.getInstance().getReference("mototrack")
-            val Motorcycle = Motorcycle(motoBrand, motoModel, mileage, vin)
-            database.child(vin).setValue(Motorcycle).addOnSuccessListener {
+            database = FirebaseDatabase.getInstance().getReference(fAuth.uid.toString())
+            val motorcycle = Motorcycle(motoBrand, motoModel, mileage, vin)
+            database.child(vin).setValue(motorcycle).addOnSuccessListener {
                 binding.motoBrand.text.clear()
                 binding.motoModel.text.clear()
                 binding.mileage.text.clear()

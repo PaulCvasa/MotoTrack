@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
@@ -21,7 +22,7 @@ class VirtualGarage: AppCompatActivity() {
     private lateinit var mAdapter: ExampleAdapter
     private var mLayoutManager: RecyclerView.LayoutManager? = null
     private val mMotorcycleList: ArrayList<ExampleItem> = ArrayList()
-
+    val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
 
 
 
@@ -53,8 +54,9 @@ class VirtualGarage: AppCompatActivity() {
         //createList()
         buildRecyclerView()
 
+
         val rootRef = FirebaseDatabase.getInstance().reference
-        val mototrackRef = rootRef.child("mototrack")
+        val mototrackRef = rootRef.child(fAuth.uid.toString())
         mototrackRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (ds in task.result?.children!!) {
