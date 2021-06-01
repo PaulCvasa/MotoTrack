@@ -42,7 +42,7 @@ class VirtualGarage: AppCompatActivity() {
         mAdapter.setOnItemClickListener(object : ExampleAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 //changeItem(position, "Clicked")
-                Toast.makeText(this@VirtualGarage, "Clicked item at position " + position, Toast.LENGTH_SHORT )
+                Toast.makeText(this@VirtualGarage, "Clicked item at position " + position, Toast.LENGTH_SHORT ).show()
             }
         })
     }
@@ -86,6 +86,16 @@ class VirtualGarage: AppCompatActivity() {
 
 
         fun removeItem(position: Int) {
+            if(position-1 >= mMotorcycleList.size)
+            {
+                Toast.makeText(this, "Error: Number exceeds the size of the virtual garage", Toast.LENGTH_SHORT).show()
+                return
+            }
+            if(position == 0)
+            {
+                Toast.makeText(this, "Error: Number can't be 0", Toast.LENGTH_SHORT).show()
+                return
+            }
             mototrackRef.child(mMotorcycleList[position-1].getText4().toString()).removeValue()
             mMotorcycleList.removeAt(position-1)
             mAdapter!!.notifyItemRemoved(position-1)
