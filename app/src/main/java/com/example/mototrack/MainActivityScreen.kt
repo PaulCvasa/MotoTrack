@@ -15,15 +15,14 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 class MainActivityScreen : AppCompatActivity() {
 
-    private val mEmail : EditText = findViewById(R.id.login_email)
-    private val mPassword : EditText = findViewById(R.id.login_password)
-    private val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
-    private val mLoginBtn : Button = findViewById(R.id.loginAccount)
-    private val mProgressBar : ProgressBar = findViewById(R.id.progressBar)
+    lateinit private var mEmail : EditText
+    lateinit private var mPassword : EditText
+    lateinit private var fAuth : FirebaseAuth
+    lateinit private var mLoginBtn : Button
+    lateinit private var mProgressBar : ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +33,25 @@ class MainActivityScreen : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mEmail.setText("")
+        mPassword.setText("")
+    }
+
+    private fun initVars()
+    {
+        mEmail = findViewById(R.id.login_email)
+        mPassword = findViewById(R.id.login_password)
+        fAuth = FirebaseAuth.getInstance()
+        mLoginBtn = findViewById(R.id.loginAccount)
+        mProgressBar = findViewById(R.id.progressBar)
+    }
+
     fun login(view: View)
     {
+        initVars()
 
         mLoginBtn.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
@@ -58,8 +74,6 @@ class MainActivityScreen : AppCompatActivity() {
                             Toast.makeText(this@MainActivityScreen, "Logged in successfully.", Toast.LENGTH_SHORT ).show()
                             startActivity(Intent(applicationContext, DashboardActivity::class.java))
                             mProgressBar.visibility = View.INVISIBLE
-                            mEmail.setText("")
-                            mPassword.setText("")
                         }
                         else{
                             Toast.makeText(this@MainActivityScreen, "ERROR: Invalid credentials", Toast.LENGTH_SHORT).show()
@@ -74,14 +88,19 @@ class MainActivityScreen : AppCompatActivity() {
 
     fun offline(view: View)
     {
+        initVars()
         val intent2 = Intent(this, DashboardActivity::class.java)
+        this.finish()
         startActivity(intent2)
+
     }
 
     fun register(view: View)
     {
+        initVars()
         val intent3 = Intent(this, Register::class.java)
         startActivity(intent3)
+        this.finish()
     }
 
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
 class DashboardActivity: AppCompatActivity() {
@@ -18,19 +17,18 @@ class DashboardActivity: AppCompatActivity() {
     {
         val intent = Intent(this, VirtualGarage::class.java)
         startActivity(intent)
-        //finish()
     }
 
     fun logout(view: View)
     {
         FirebaseAuth.getInstance().signOut()
-        //val intent2 = Intent(this, MainActivityScreen::class.java)
+        val intent2 = Intent(this, MainActivityScreen::class.java)
+        startActivity(intent2)
         finish()
     }
     fun addMotorcycle(view: View)
     {
         val intent3 = Intent(this, AddMotorcycle::class.java)
         startActivity(intent3)
-        //finish()
     }
 }
