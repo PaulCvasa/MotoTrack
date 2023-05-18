@@ -18,6 +18,13 @@ import com.google.firebase.auth.FirebaseAuth
 
 class Register : AppCompatActivity() {
 
+    private val mName: EditText = findViewById(R.id.register_name)
+    private val mEmail: EditText = findViewById(R.id.register_email)
+    private val mPassword: EditText = findViewById(R.id.register_password)
+    private val mRegisterBtn: Button = findViewById(R.id.registerAccount)
+    private val fAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val mProgressBar: ProgressBar = findViewById(R.id.progressBar2)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -29,14 +36,15 @@ class Register : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mEmail.setText("")
+        mPassword.setText("")
+    }
+
     //register to firebase
     fun register(view: View) {
-        val mName: EditText = findViewById(R.id.register_name)
-        val mEmail: EditText = findViewById(R.id.register_email)
-        val mPassword: EditText = findViewById(R.id.register_password)
-        val mRegisterBtn: Button = findViewById(R.id.registerAccount)
-        val fAuth: FirebaseAuth = FirebaseAuth.getInstance()
-        val mProgressBar: ProgressBar = findViewById(R.id.progressBar2)
+
 
         if (fAuth.currentUser != null) {
             startActivity(Intent(applicationContext, DashboardActivity::class.java))

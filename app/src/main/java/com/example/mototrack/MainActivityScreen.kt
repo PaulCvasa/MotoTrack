@@ -19,6 +19,12 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivityScreen : AppCompatActivity() {
 
+    private val mEmail : EditText = findViewById(R.id.login_email)
+    private val mPassword : EditText = findViewById(R.id.login_password)
+    private val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
+    private val mLoginBtn : Button = findViewById(R.id.loginAccount)
+    private val mProgressBar : ProgressBar = findViewById(R.id.progressBar)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
@@ -30,11 +36,6 @@ class MainActivityScreen : AppCompatActivity() {
     }
     fun login(view: View)
     {
-        val mEmail : EditText = findViewById(R.id.login_email)
-        val mPassword : EditText = findViewById(R.id.login_password)
-        val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
-        val mLoginBtn : Button = findViewById(R.id.loginAccount)
-        val mProgressBar : ProgressBar = findViewById(R.id.progressBar)
 
         mLoginBtn.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
@@ -57,10 +58,13 @@ class MainActivityScreen : AppCompatActivity() {
                             Toast.makeText(this@MainActivityScreen, "Logged in successfully.", Toast.LENGTH_SHORT ).show()
                             startActivity(Intent(applicationContext, DashboardActivity::class.java))
                             mProgressBar.visibility = View.INVISIBLE
+                            mEmail.setText("")
+                            mPassword.setText("")
                         }
                         else{
                             Toast.makeText(this@MainActivityScreen, "ERROR: Invalid credentials", Toast.LENGTH_SHORT).show()
                             mProgressBar.visibility = View.INVISIBLE
+                            mPassword.setText("")
                         }
                     }
                 })
