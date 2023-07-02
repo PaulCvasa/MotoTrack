@@ -1,0 +1,7 @@
+type MotorcycleDB @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  vin: String
+  mileage: Int
+  motoBrand: String
+  motoModel: String
+}

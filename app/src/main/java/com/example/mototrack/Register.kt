@@ -3,12 +3,16 @@ package com.example.mototrack
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.amplifyframework.auth.AuthUserAttributeKey
+import com.amplifyframework.auth.options.AuthSignUpOptions
+import com.amplifyframework.core.Amplify
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,9 +20,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
+
+
+
 class Register : AppCompatActivity() {
 
-    lateinit private var mName: EditText
+    lateinit private var mUsername: EditText
     lateinit private var mEmail: EditText
     lateinit private var mPassword: EditText
     lateinit private var mRegisterBtn: Button
@@ -34,6 +41,8 @@ class Register : AppCompatActivity() {
                 .setAction("Action", null).show()
 
         }
+
+
     }
 
     override fun onDestroy() {
@@ -45,7 +54,7 @@ class Register : AppCompatActivity() {
     //initialize vars
     private fun initVars()
     {
-        mName= findViewById(R.id.register_name)
+        mUsername= findViewById(R.id.register_username)
         mEmail= findViewById(R.id.register_email)
         mPassword = findViewById(R.id.register_password)
         mRegisterBtn = findViewById(R.id.registerAccount)
@@ -67,6 +76,7 @@ class Register : AppCompatActivity() {
             override fun onClick(v: View?) {
                 val email: String = mEmail.text.toString().trim()
                 val password: String = mPassword.text.toString().trim()
+                val username: String = mUsername.text.toString().trim()
                 //verification
                 if (TextUtils.isEmpty(email)) {
                     mEmail.error = "Error: Email is required"
@@ -77,7 +87,9 @@ class Register : AppCompatActivity() {
                     return
                 }
                 mProgressBar.visibility = View.VISIBLE
-                fAuth.createUserWithEmailAndPassword(email, password)
+
+                // Firebase auth
+                /*fAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(object : OnCompleteListener<AuthResult> {
                         override fun onComplete(p0: Task<AuthResult>) {
                             if (p0.isSuccessful) {
@@ -90,10 +102,33 @@ class Register : AppCompatActivity() {
                                 mProgressBar.visibility = View.INVISIBLE
                             }
                         }
-                    })
+                    })*/
+
+                // Amplify auth
+                val options = AuthSignUpOptions.builder()
+                    .userAttribute(AuthUserAttributeKey.email(), email)
+                    .build()
+                Amplify.Auth.signUp(username, password, options,
+                    { Log.i("AuthQuickStart", "Sign up succeeded: $it")
+                        runOnUiThread {
+                            Toast.makeText(this@Register, "Account Created.", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(applicationContext, DashboardActivity::class.java))
+                        }
+                        mProgressBar.visibility = View.INVISIBLE },
+                    { Log.e ("AuthQuickStart", "Sign up failed", it)
+                        runOnUiThread {
+                            Toast.makeText(this@Register, "Error: " + it, Toast.LENGTH_SHORT).show()
+                        }
+                        mProgressBar.visibility = View.INVISIBLE}
+                )
+
             }
         })
-    }
+
+
+            }
+
+
 
     //switch to login screen
     fun switch_toLogin(view: View)
