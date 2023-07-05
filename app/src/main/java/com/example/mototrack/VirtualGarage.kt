@@ -4,45 +4,39 @@ package com.example.mototrack
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.getValue
+import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
+import com.amplifyframework.auth.result.AuthSessionResult
+import com.amplifyframework.core.Amplify
+import com.amplifyframework.core.model.query.Where
+import com.amplifyframework.datastore.generated.model.MotorcycleDB
 
 
 class VirtualGarage: AppCompatActivity() {
     private var mRecyclerView: RecyclerView? = null
-    private lateinit var mAdapter: ExampleAdapter
+    private lateinit var mAdapter: MotorcycleAdapter
     private var mLayoutManager: RecyclerView.LayoutManager? = null
-    private val mMotorcycleList: ArrayList<ExampleItem> = ArrayList()
-    val fAuth : FirebaseAuth = FirebaseAuth.getInstance()
-
-
-
-    /*fun createList() {
-        mMotorcycleList.add(ExampleItem(R.drawable.ic_oldtimer_motorcycle_mechanic, "Kawasaki", "ER-6N"))
-        mMotorcycleList.add(ExampleItem(R.drawable.ic_oldtimer_motorcycle_mechanic, "BMW", "R 1200 R"))
-        mMotorcycleList.add(ExampleItem(R.drawable.ic_oldtimer_motorcycle_mechanic, "Line 5", "Line 6"))
-    }*/
+    private val mMotorcycleList: ArrayList<MotorcycleAWS> = ArrayList()
 
     fun buildRecyclerView() {
         mRecyclerView = findViewById(R.id.recyclerView)
         mLayoutManager = LinearLayoutManager(this)
-        mAdapter = ExampleAdapter(mMotorcycleList)
+        mAdapter = MotorcycleAdapter(mMotorcycleList)
         mRecyclerView?.layoutManager = mLayoutManager
         mRecyclerView?.adapter = mAdapter
 
-        mAdapter.setOnItemClickListener(object : ExampleAdapter.OnItemClickListener {
+        mAdapter.setOnItemClickListener(object : MotorcycleAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                //changeItem(position, "Clicked")
-                Toast.makeText(this@VirtualGarage, "Clicked item at position " + position, Toast.LENGTH_SHORT ).show()
+                Toast.makeText(
+                    this@VirtualGarage,
+                    "Clicked item at position " + position,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
@@ -50,66 +44,95 @@ class VirtualGarage: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_virtual_garage)
-
-        //createList()
         buildRecyclerView()
 
+        // AWS Database
+        Amplify.Auth.fetchAuthSession(
+            {
+                val session = it as AWSCognitoAuthSession
+                when (session.identityIdResult.type) {
+                    AuthSessionResult.Type.SUCCESS -> {
+                        Log.i("AuthQuickStart", "IdentityId = ${session.identityIdResult.value}")
+                        Amplify.DataStore.query(
+                            MotorcycleDB::class.java,
+                            Where.matches(MotorcycleDB.OWNER.eq(session.identityIdResult.value.toString())),
+                            { motorcycles ->
+                                while (motorcycles.hasNext()) {
+                                    val moto = motorcycles.next()
+                                    Log.i("AmplifyDB", "Queried item: " + moto.id)
+                                    val item = MotorcycleAWS(
+                                        moto.id,
+                                        moto.vin,
+                                        moto.mileage,
+                                        moto.motoBrand,
+                                        moto.motoModel
+                                    )
+                                    mMotorcycleList.add(item)
+                                }
+                            },
+                            { failure -> Log.e("AmplifyDB", "Could not query DataStore", failure) }
+                        )
+                    }
 
-        val rootRef = FirebaseDatabase.getInstance().reference
-        val mototrackRef = rootRef.child(fAuth.uid.toString())
-        mototrackRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                for (ds in task.result?.children!!) {
-                    val motoBrand = ds.child("motoBrand").getValue(String::class.java)
-                    Log.d("TAG", motoBrand!!)
-                    //item.setText1(motoBrand)
-                    val motoModel = ds.child("motoModel").getValue(String::class.java)
-                    Log.d("TAG", motoModel!!)
-                    //item.setText2(motoModel)
-                    val mileage = ds.child("mileage").getValue(String::class.java)
-                    Log.d("TAG", mileage!!)
-                    //item.setText3(mileage)
-                    val vin = ds.child("vin").getValue(String::class.java)
-                    Log.d("TAG", vin!!)
-                    //item.setText4(vin)
-                    val item = ExampleItem(motoBrand,motoModel,mileage,vin)
-                    mMotorcycleList.add(item)
+                    AuthSessionResult.Type.FAILURE ->
+                        Log.w(
+                            "AuthQuickStart",
+                            "IdentityId not found",
+                            session.identityIdResult.error
+                        )
                 }
-            } else {
-                Log.d("TAG", task.exception?.message!!) // potential errors!
-            }
-            mAdapter.notifyDataSetChanged()
-        }
+            },
+            { Log.e("AuthQuickStart", "Failed to fetch session", it) }
+        )
+        mAdapter.notifyDataSetChanged()
 
+        val buttonAdd: Button = findViewById(R.id.button_insert)
         val buttonRemove: Button = findViewById(R.id.button_remove)
         val editTextRemove: EditText = findViewById(R.id.edittext_remove)
 
-
         fun removeItem(position: Int) {
-            if(position-1 >= mMotorcycleList.size)
-            {
-                Toast.makeText(this, "Error: Number exceeds the size of the virtual garage", Toast.LENGTH_SHORT).show()
+            if (position - 1 >= mMotorcycleList.size) {
+                Toast.makeText(
+                    this,
+                    "Error: Number exceeds the size of the virtual garage",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
-            if(position == 0)
-            {
+            if (position == 0) {
                 Toast.makeText(this, "Error: Number can't be 0", Toast.LENGTH_SHORT).show()
                 return
             }
-            mototrackRef.child(mMotorcycleList[position-1].getText4().toString()).removeValue()
-            mMotorcycleList.removeAt(position-1)
-            mAdapter!!.notifyItemRemoved(position-1)
+
+            Amplify.DataStore.query(MotorcycleDB::class.java, Where.matches(MotorcycleDB.ID.eq(mMotorcycleList[position-1].getID())),
+                { matches ->
+                    if (matches.hasNext()) {
+                        val post = matches.next()
+                        Amplify.DataStore.delete(post,
+                            { Log.i("AmplifyDB", "Deleted a motorcycle.") },
+                            { Log.e("AmplifyDB", "Delete failed.", it) }
+                        )
+                    }
+                },
+                { Log.e("AmplifyDB", "Query failed.", it) }
+            )
+            mMotorcycleList.removeAt(position - 1)
+            mAdapter!!.notifyItemRemoved(position - 1)
         }
+            buttonRemove.setOnClickListener {
+                val position = editTextRemove.text.toString().toInt()
+                removeItem(position)
+            }
+
+            buttonAdd.setOnClickListener {
+                addMotorcycle()
+            }
 
 
-        buttonRemove.setOnClickListener {
-            val position = editTextRemove.text.toString().toInt()
-            removeItem(position)
-        }
+
 
     }
-    fun addMotorcycle(view: View)
-    {
+    fun addMotorcycle() {
         val intent3 = Intent(this, AddMotorcycle::class.java)
         startActivity(intent3)
         finish()

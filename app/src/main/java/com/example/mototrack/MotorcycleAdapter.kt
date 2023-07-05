@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class ExampleAdapter(private val mExampleList: ArrayList<ExampleItem>) :
-    RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+class MotorcycleAdapter(private val mMotoList: ArrayList<MotorcycleAWS>) :
+    RecyclerView.Adapter<MotorcycleAdapter.MotorcycleViewHolder>() {
 
     private var mListener: OnItemClickListener? = null
 
@@ -21,7 +21,7 @@ class ExampleAdapter(private val mExampleList: ArrayList<ExampleItem>) :
         mListener = listener
     }
 
-    class ExampleViewHolder(itemView: View, listener: OnItemClickListener?) : RecyclerView.ViewHolder(itemView) {
+    class MotorcycleViewHolder(itemView: View, listener: OnItemClickListener?) : RecyclerView.ViewHolder(itemView) {
         var mImageView: ImageView
         var mMotorcycleMaker: TextView
         var mMotorcycleModel: TextView
@@ -57,22 +57,22 @@ class ExampleAdapter(private val mExampleList: ArrayList<ExampleItem>) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ExampleViewHolder {
+    ): MotorcycleViewHolder {
         val v =
             LayoutInflater.from(parent.context).inflate(R.layout.example_item, parent, false)
-        return ExampleViewHolder(v, mListener)
+        return MotorcycleViewHolder(v, mListener)
     }
 
-    override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
-        val currentItem = mExampleList[position]
-        holder.mImageView.setImageResource(currentItem.getImageResource())
-        holder.mMotorcycleMaker.text = currentItem.getText1()
-        holder.mMotorcycleModel.text = currentItem.getText2()
-        holder.mMotorcycleMileage.text = currentItem.getText3()
-        holder.mMotorcycleVIN.text = currentItem.getText4()
+    override fun onBindViewHolder(holder: MotorcycleViewHolder, position: Int) {
+        val currentItem = mMotoList[position]
+        holder.mImageView.setImageResource(currentItem.getImage())
+        holder.mMotorcycleMaker.text = currentItem.getMotoBrand()
+        holder.mMotorcycleModel.text = currentItem.getMotoModel()
+        holder.mMotorcycleMileage.text = currentItem.getMileage().toString()
+        holder.mMotorcycleVIN.text = currentItem.getVIN()
     }
 
     override fun getItemCount(): Int {
-        return mExampleList.size
+        return mMotoList.size
     }
 }

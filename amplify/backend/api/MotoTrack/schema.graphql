@@ -4,4 +4,6 @@ type MotorcycleDB @model @auth(rules: [{allow: public}]) {
   mileage: Int
   motoBrand: String
   motoModel: String
+  owner: String
 }
+ 

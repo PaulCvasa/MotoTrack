@@ -13,9 +13,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.core.Amplify
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivityScreen : AppCompatActivity() {
@@ -34,8 +31,6 @@ class MainActivityScreen : AppCompatActivity() {
             Snackbar.make(view, "Support email: paul.cvasa00@e-uvt.ro", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-
-
     }
 
     override fun onDestroy() {
@@ -72,22 +67,6 @@ class MainActivityScreen : AppCompatActivity() {
                     return
                 }
                 mProgressBar.visibility = View.VISIBLE
-
-                // Firebase Auth
-                //fAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(object: OnCompleteListener<AuthResult>{
-                //    override fun onComplete(p0: Task<AuthResult>) {
-                //        if(p0.isSuccessful){
-                //            Toast.makeText(this@MainActivityScreen, "Logged in successfully.", Toast.LENGTH_SHORT ).show()
-                //            startActivity(Intent(applicationContext, DashboardActivity::class.java))
-                //            mProgressBar.visibility = View.INVISIBLE
-                //        }
-                //        else{
-                //            Toast.makeText(this@MainActivityScreen, "ERROR: Invalid credentials", Toast.LENGTH_SHORT).show()
-                //            mProgressBar.visibility = View.INVISIBLE
-                //            mPassword.setText("")
-                //        }
-                //    }
-                //})
 
                 //Amplify Auth
                 Amplify.Auth.signIn(username, password,

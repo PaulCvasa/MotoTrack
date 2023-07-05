@@ -2,9 +2,7 @@ package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.Objects;
 
 import androidx.core.util.ObjectsCompat;
 
@@ -12,7 +10,6 @@ import com.amplifyframework.core.model.AuthStrategy;
 import com.amplifyframework.core.model.Model;
 import com.amplifyframework.core.model.ModelOperation;
 import com.amplifyframework.core.model.annotations.AuthRule;
-import com.amplifyframework.core.model.annotations.Index;
 import com.amplifyframework.core.model.annotations.ModelConfig;
 import com.amplifyframework.core.model.annotations.ModelField;
 import com.amplifyframework.core.model.query.predicate.QueryField;
@@ -30,11 +27,13 @@ public final class MotorcycleDB implements Model {
   public static final QueryField MILEAGE = field("MotorcycleDB", "mileage");
   public static final QueryField MOTO_BRAND = field("MotorcycleDB", "motoBrand");
   public static final QueryField MOTO_MODEL = field("MotorcycleDB", "motoModel");
+  public static final QueryField OWNER = field("MotorcycleDB", "owner");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String vin;
   private final @ModelField(targetType="Int") Integer mileage;
   private final @ModelField(targetType="String") String motoBrand;
   private final @ModelField(targetType="String") String motoModel;
+  private final @ModelField(targetType="String") String owner;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String resolveIdentifier() {
@@ -61,6 +60,10 @@ public final class MotorcycleDB implements Model {
       return motoModel;
   }
   
+  public String getOwner() {
+      return owner;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -69,12 +72,13 @@ public final class MotorcycleDB implements Model {
       return updatedAt;
   }
   
-  private MotorcycleDB(String id, String vin, Integer mileage, String motoBrand, String motoModel) {
+  private MotorcycleDB(String id, String vin, Integer mileage, String motoBrand, String motoModel, String owner) {
     this.id = id;
     this.vin = vin;
     this.mileage = mileage;
     this.motoBrand = motoBrand;
     this.motoModel = motoModel;
+    this.owner = owner;
   }
   
   @Override
@@ -90,6 +94,7 @@ public final class MotorcycleDB implements Model {
               ObjectsCompat.equals(getMileage(), motorcycleDb.getMileage()) &&
               ObjectsCompat.equals(getMotoBrand(), motorcycleDb.getMotoBrand()) &&
               ObjectsCompat.equals(getMotoModel(), motorcycleDb.getMotoModel()) &&
+              ObjectsCompat.equals(getOwner(), motorcycleDb.getOwner()) &&
               ObjectsCompat.equals(getCreatedAt(), motorcycleDb.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), motorcycleDb.getUpdatedAt());
       }
@@ -103,6 +108,7 @@ public final class MotorcycleDB implements Model {
       .append(getMileage())
       .append(getMotoBrand())
       .append(getMotoModel())
+      .append(getOwner())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -118,6 +124,7 @@ public final class MotorcycleDB implements Model {
       .append("mileage=" + String.valueOf(getMileage()) + ", ")
       .append("motoBrand=" + String.valueOf(getMotoBrand()) + ", ")
       .append("motoModel=" + String.valueOf(getMotoModel()) + ", ")
+      .append("owner=" + String.valueOf(getOwner()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -142,6 +149,7 @@ public final class MotorcycleDB implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -151,7 +159,8 @@ public final class MotorcycleDB implements Model {
       vin,
       mileage,
       motoBrand,
-      motoModel);
+      motoModel,
+      owner);
   }
   public interface BuildStep {
     MotorcycleDB build();
@@ -160,6 +169,7 @@ public final class MotorcycleDB implements Model {
     BuildStep mileage(Integer mileage);
     BuildStep motoBrand(String motoBrand);
     BuildStep motoModel(String motoModel);
+    BuildStep owner(String owner);
   }
   
 
@@ -169,6 +179,7 @@ public final class MotorcycleDB implements Model {
     private Integer mileage;
     private String motoBrand;
     private String motoModel;
+    private String owner;
     @Override
      public MotorcycleDB build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -178,7 +189,8 @@ public final class MotorcycleDB implements Model {
           vin,
           mileage,
           motoBrand,
-          motoModel);
+          motoModel,
+          owner);
     }
     
     @Override
@@ -205,6 +217,12 @@ public final class MotorcycleDB implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep owner(String owner) {
+        this.owner = owner;
+        return this;
+    }
+    
     /**
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -217,12 +235,13 @@ public final class MotorcycleDB implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String vin, Integer mileage, String motoBrand, String motoModel) {
+    private CopyOfBuilder(String id, String vin, Integer mileage, String motoBrand, String motoModel, String owner) {
       super.id(id);
       super.vin(vin)
         .mileage(mileage)
         .motoBrand(motoBrand)
-        .motoModel(motoModel);
+        .motoModel(motoModel)
+        .owner(owner);
     }
     
     @Override
@@ -243,6 +262,11 @@ public final class MotorcycleDB implements Model {
     @Override
      public CopyOfBuilder motoModel(String motoModel) {
       return (CopyOfBuilder) super.motoModel(motoModel);
+    }
+    
+    @Override
+     public CopyOfBuilder owner(String owner) {
+      return (CopyOfBuilder) super.owner(owner);
     }
   }
   

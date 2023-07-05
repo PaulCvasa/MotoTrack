@@ -1,10 +1,10 @@
 package com.example.mototrack
 
 import android.util.Log
-import com.amplifyframework.AmplifyException
+import com.amplifyframework.api.aws.AWSApiPlugin
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
-import kotlinx.coroutines.awaitAll
+import com.amplifyframework.datastore.AWSDataStorePlugin
 
 class MyAmplifyApp : android.app.Application() {
 
@@ -13,6 +13,8 @@ class MyAmplifyApp : android.app.Application() {
 
         // Include the Auth plugin.
         Amplify.addPlugin(AWSCognitoAuthPlugin())
+        Amplify.addPlugin(AWSDataStorePlugin())
+        Amplify.addPlugin(AWSApiPlugin())
         Amplify.configure(applicationContext)
 
         Amplify.Auth.fetchAuthSession(
